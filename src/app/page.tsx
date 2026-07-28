@@ -1,65 +1,56 @@
-import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentProfile, homePathForRole } from "@/lib/data/session";
 
-export default function Home() {
+export default async function Home() {
+  const profile = await getCurrentProfile();
+  if (profile) redirect(homePathForRole(profile.role));
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="cosmic-bg flex flex-1 flex-col items-center justify-center gap-8 px-6 py-20 text-center">
+      <div
+        className="blob"
+        style={{ width: 160, height: 160, top: "8%", left: "8%", background: "#8a4fff", opacity: 0.5 }}
+      />
+      <div
+        className="blob"
+        style={{ width: 90, height: 90, top: "18%", right: "12%", background: "#ffc23c", animationDelay: "1.5s" }}
+      />
+      <div
+        className="blob"
+        style={{ width: 50, height: 50, bottom: "14%", left: "16%", background: "#2fb0f0", animationDelay: "3s" }}
+      />
+
+      <div
+        className="relative flex flex-col items-center gap-4"
+        style={{ animation: "fadeSlideUp 0.7s ease-out both" }}
+      >
+        <span className="text-6xl animate-[wiggle_2.5s_ease-in-out_infinite]">🚀</span>
+        <h1 className="max-w-2xl text-4xl font-extrabold tracking-tight sm:text-5xl">
+          Learn Korean, one stage at a time
+        </h1>
+        <p className="max-w-md text-lg text-white/80">
+          Bite-sized lessons, unlockable stages, and progress your teachers
+          and parents can actually see.
+        </p>
+      </div>
+      <div
+        className="relative flex gap-4"
+        style={{ animation: "fadeSlideUp 0.7s ease-out 0.15s both" }}
+      >
+        <Link
+          href="/signup"
+          className="pill-btn bg-coral px-7 py-3 text-white shadow-lg shadow-coral/30"
+        >
+          Get started
+        </Link>
+        <Link
+          href="/login"
+          className="pill-btn border-2 border-white/30 px-7 py-3 text-white"
+        >
+          Log in
+        </Link>
+      </div>
+    </main>
   );
 }

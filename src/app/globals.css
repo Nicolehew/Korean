@@ -1,26 +1,135 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f2fd;
+  --foreground: #241c3d;
+  --card: #ffffff;
+  --border: #e6e1f5;
+  --primary: #6d56fa;
+  --primary-foreground: #ffffff;
+  --accent: #ffb020;
+  --accent-foreground: #1e1b2e;
+  --success: #22c55e;
+  --muted: #6b6478;
+
+  /* playful accent palette, used for icon badges / card highlights */
+  --coral: #ff5a6e;
+  --sky: #2fb0f0;
+  --mint: #16c79a;
+  --violet: #8a4fff;
+  --sun: #ffc23c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-muted: var(--muted);
+  --color-coral: var(--coral);
+  --color-sky: var(--sky);
+  --color-mint: var(--mint);
+  --color-violet: var(--violet);
+  --color-sun: var(--sun);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #16121f;
+    --foreground: #f1eefb;
+    --card: #201a30;
+    --border: #362b4d;
+    --primary: #8a77ff;
+    --primary-foreground: #16121f;
+    --accent: #ffc247;
+    --accent-foreground: #16121f;
+    --muted: #a79fbb;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* ---- Cosmic hero background (landing / auth pages) ---- */
+.cosmic-bg {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255, 194, 60, 0.25), transparent 55%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.55) 1.5px, transparent 1.5px),
+    linear-gradient(160deg, #2a1a5e 0%, #3d1f7a 45%, #1a1140 100%);
+  background-size: auto, 26px 26px, auto;
+  color: #fdfcff;
+  overflow: hidden;
+}
+.cosmic-bg .blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(1px);
+  opacity: 0.9;
+  animation: floatY 7s ease-in-out infinite;
+}
+
+/* ---- Reusable playful bits ---- */
+.pop-card {
+  background: var(--card);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -12px rgba(109, 86, 250, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pop-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px -12px rgba(109, 86, 250, 0.32);
+}
+
+.pill-btn {
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.pill-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+.pill-btn:active {
+  transform: scale(0.97);
+}
+
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { opacity: 1; transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(-4deg); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
 }
