@@ -157,3 +157,68 @@ body {
   25% { transform: rotate(-6deg); }
   75% { transform: rotate(6deg); }
 }
+
+/* ---- Outdoor scene behind the lesson path ----
+   Sky at the top fading into rolling grass, with soft cloud puffs and
+   hill mounds layered on top. Pure CSS so it scales to any height and
+   needs no image assets. */
+.scene-bg {
+  position: relative;
+  background: linear-gradient(180deg, #bfe6fb 0%, #d8f0fd 22%, #a8dd7a 46%, #8fd15f 100%);
+}
+.scene-bg::before {
+  /* distant tree line */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 34%;
+  height: 90px;
+  background:
+    radial-gradient(circle at 8% 100%, #5aa544 0 42px, transparent 43px),
+    radial-gradient(circle at 26% 100%, #4f9a3c 0 54px, transparent 55px),
+    radial-gradient(circle at 48% 100%, #5aa544 0 38px, transparent 39px),
+    radial-gradient(circle at 70% 100%, #4f9a3c 0 50px, transparent 51px),
+    radial-gradient(circle at 92% 100%, #5aa544 0 44px, transparent 45px);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.scene-cloud {
+  position: absolute;
+  background: #fff;
+  border-radius: 9999px;
+  opacity: 0.92;
+  pointer-events: none;
+  animation: driftX 26s linear infinite;
+}
+.scene-cloud::before,
+.scene-cloud::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 9999px;
+}
+.scene-cloud::before {
+  width: 60%;
+  height: 150%;
+  left: 12%;
+  bottom: 30%;
+}
+.scene-cloud::after {
+  width: 45%;
+  height: 120%;
+  right: 10%;
+  bottom: 25%;
+}
+.scene-hill {
+  position: absolute;
+  border-radius: 50% 50% 0 0;
+  pointer-events: none;
+}
+
+/* dirt trail connecting the stages */
+
+@keyframes driftX {
+  from { transform: translateX(-12%); }
+  to { transform: translateX(112%); }
+}
