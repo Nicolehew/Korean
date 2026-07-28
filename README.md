@@ -98,6 +98,13 @@ placeholder type actively broke inference on every query).
 
 ## Deploying
 
-Push to a Git repo and import it on [Vercel](https://vercel.com/new). Add the same
-environment variables from `.env.local` (except `SUPABASE_SERVICE_ROLE_KEY`, which
-only the local seed script needs) in the Vercel project settings.
+Push to a Git repo and import it on [Vercel](https://vercel.com/new).
+
+**You must add the environment variables in Vercel** — Project → Settings →
+Environment Variables → add `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` (values are in your local `.env.local`), then
+redeploy. Skip `SUPABASE_SERVICE_ROLE_KEY` — only the local seed script needs it,
+and it must never reach the browser.
+
+Without those two variables the deployed site loads but every login/signup fails,
+since there's no database to talk to.
