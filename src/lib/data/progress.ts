@@ -44,7 +44,6 @@ export async function getLevelMap(userId: string): Promise<LevelMap> {
   const sortedUnits = [...((units ?? []) as Unit[])].sort(
     (a, b) => a.order_index - b.order_index,
   );
-  const firstUnitId = sortedUnits[0]?.id;
 
   return ((levels ?? []) as Level[]).map((level) => ({
     ...level,
@@ -52,28 +51,38 @@ export async function getLevelMap(userId: string): Promise<LevelMap> {
       .filter((u) => u.level_id === level.id)
       .map((unit) => {
         const storedUnit = unitProgressById.get(unit.id);
-        const unitStatus: ProgressStatus =
-          storedUnit?.status ?? (unit.id === firstUnitId ? "in_progress" : "locked");
 
         const unitLessons = ((lessons ?? []) as Lesson[])
           .filter((l) => l.unit_id === unit.id)
           .sort((a, b) => a.order_index - b.order_index);
 
-        let unlockedAssigned = false;
+        // Every stage is open. Students asked to be able to jump ahead and
+        // to replay finished lessons, so status is now purely a record of
+        // what they've done, not a gate on what they may tap.
+        let firstUnfinishedTaken = false;
         const lessonsWithStatus: LessonWithStatus[] = unitLessons.map((lesson) => {
           const stored = lessonProgressById.get(lesson.id);
-          if (stored?.status === "completed") return { ...lesson, status: "completed" };
-          if (unitStatus !== "locked" && !unlockedAssigned) {
-            unlockedAssigned = true;
-            return { ...lesson, status: "in_progress" };
+          if (stored?.status === "completed") {
+            return { ...lesson, status: "completed" as ProgressStatus };
           }
-          return { ...lesson, status: "locked" };
+          if (!firstUnfinishedTaken) {
+            firstUnfinishedTaken = true;
+            return { ...lesson, status: "in_progress" as ProgressStatus };
+          }
+          return { ...lesson, status: "available" as ProgressStatus };
         });
+
+        const allDone =
+          lessonsWithStatus.length > 0 &&
+          lessonsWithStatus.every((l) => l.status === "completed");
 
         return {
           ...unit,
           lessons: lessonsWithStatus,
-          progress: { status: unitStatus, stars: storedUnit?.stars ?? 0 },
+          progress: {
+            status: (allDone ? "completed" : "in_progress") as ProgressStatus,
+            stars: storedUnit?.stars ?? 0,
+          },
         };
       }),
   }));

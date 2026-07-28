@@ -41,7 +41,7 @@ export function LevelPath({
 
   return (
     <div
-      className="scene-bg relative w-full overflow-hidden rounded-3xl"
+      className="path-bg relative w-full overflow-hidden rounded-3xl"
       style={{ height }}
     >
       {/* clouds */}
@@ -54,16 +54,6 @@ export function LevelPath({
         style={{ width: 46, height: 16, top: 70, left: "55%", animationDelay: "-13s" }}
       />
 
-      {/* grass mounds */}
-      <div
-        className="scene-hill"
-        style={{ width: 220, height: 90, bottom: 0, left: "-12%", background: "#7cc44e" }}
-      />
-      <div
-        className="scene-hill"
-        style={{ width: 260, height: 110, bottom: 0, right: "-14%", background: "#74bd47" }}
-      />
-
       {/* dirt trail winding between the stages */}
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"
@@ -71,12 +61,12 @@ export function LevelPath({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={trailD} fill="none" stroke="#a97a48" strokeWidth="13" strokeLinecap="round" />
-        <path d={trailD} fill="none" stroke="#c89a63" strokeWidth="9" strokeLinecap="round" />
+        <path d={trailD} fill="none" stroke="#e6ddff" strokeWidth="13" strokeLinecap="round" />
+        <path d={trailD} fill="none" stroke="#f4f0ff" strokeWidth="9" strokeLinecap="round" />
         <path
           d={trailD}
           fill="none"
-          stroke="#a97a48"
+          stroke="#d8ceff"
           strokeWidth="9"
           strokeLinecap="butt"
           strokeDasharray="1.5 7"
@@ -86,7 +76,6 @@ export function LevelPath({
 
       {lessons.map((lesson, i) => {
         const x = nodeX(i);
-        const locked = lesson.status === "locked";
         const completed = lesson.status === "completed";
         const isActive = i === activeIndex;
         const isGate = lesson.lesson_type === "unlock_game";
@@ -96,12 +85,12 @@ export function LevelPath({
             className={`flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold transition active:translate-y-1 ${
               completed
                 ? "bg-mint text-white shadow-[0_5px_0_#0f9c78]"
-                : locked
-                  ? "bg-border text-muted shadow-[0_5px_0_rgba(0,0,0,0.12)]"
-                  : "bg-sun text-white shadow-[0_5px_0_#d99a1f]"
+                : isActive
+                  ? "bg-sun text-white shadow-[0_5px_0_#d99a1f]"
+                  : "bg-white text-primary shadow-[0_5px_0_#cfc6f5]"
             }`}
           >
-            {completed ? "★" : isGate ? "🔒" : i + 1}
+            {completed ? "★" : isGate ? "🎮" : i + 1}
           </div>
         );
 
@@ -116,14 +105,10 @@ export function LevelPath({
                 Start
               </span>
             )}
-            {locked ? (
-              circle
-            ) : (
-              <Link href={`/learn/lesson/${lesson.id}`} aria-label={lesson.name}>
-                {circle}
-              </Link>
-            )}
-            <p className="mt-1.5 line-clamp-2 rounded-md bg-white/75 px-1.5 py-0.5 text-center text-[11px] font-bold leading-tight text-[#3d2f16]">
+            <Link href={`/learn/lesson/${lesson.id}`} aria-label={lesson.name}>
+              {circle}
+            </Link>
+            <p className="mt-1.5 line-clamp-2 text-center text-[11px] font-bold leading-tight text-muted">
               {lesson.name}
             </p>
           </div>

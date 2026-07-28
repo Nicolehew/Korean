@@ -2,11 +2,12 @@
 // blush cheeks. Kept as inline SVG (rather than images) so they scale
 // crisply, animate, and need no asset pipeline.
 
-export type MascotId = "cat" | "bear" | "bunny" | "dino" | "fox" | "panda";
+export type MascotId = "duck" | "cat" | "bear" | "bunny" | "dino" | "fox" | "panda";
 
-export const MASCOT_IDS: MascotId[] = ["cat", "bear", "bunny", "dino", "fox", "panda"];
+export const MASCOT_IDS: MascotId[] = ["duck", "cat", "bear", "bunny", "dino", "fox", "panda"];
 
 export const MASCOT_NAMES: Record<MascotId, string> = {
+  duck: "Ori the duck",
   cat: "Nabi the cat",
   bear: "Gomi the bear",
   bunny: "Tokki the bunny",
@@ -16,6 +17,7 @@ export const MASCOT_NAMES: Record<MascotId, string> = {
 };
 
 const PALETTE: Record<MascotId, { body: string; inner: string; dark: string }> = {
+  duck: { body: "#f7d94e", inner: "#fdf0b8", dark: "#f0a23c" },
   cat: { body: "#f5a94e", inner: "#ffd2a6", dark: "#e08b32" },
   bear: { body: "#b98a63", inner: "#e4c3a3", dark: "#9c7050" },
   bunny: { body: "#f7ecd9", inner: "#ffd5d5", dark: "#e0d2bb" },
@@ -87,6 +89,14 @@ export function Mascot({
         </>
       )}
 
+      {id === "duck" && (
+        <>
+          {/* bucket hat brim + crown */}
+          <ellipse cx="50" cy="30" rx="40" ry="10" fill="#f6efd6" />
+          <path d="M22 30 Q22 6 50 6 Q78 6 78 30 Z" fill="#fbf6e4" />
+        </>
+      )}
+
       {/* body + head */}
       <ellipse cx="50" cy="72" rx="30" ry="24" fill={c.body} />
       <circle cx="50" cy="48" r="32" fill={c.body} />
@@ -112,19 +122,23 @@ export function Mascot({
       <ellipse cx="27" cy="57" rx="6" ry="4" fill="#ff9aa8" opacity="0.55" />
       <ellipse cx="73" cy="57" rx="6" ry="4" fill="#ff9aa8" opacity="0.55" />
 
-      {/* nose + smile */}
-      <ellipse cx="50" cy="56" rx="3.4" ry="2.6" fill="#2b2b33" />
+      {/* nose / beak */}
+      {id === "duck" ? (
+        <ellipse cx="50" cy="57" rx="8" ry="5.5" fill="#f0912f" />
+      ) : (
+        <ellipse cx="50" cy="56" rx="3.4" ry="2.6" fill="#2b2b33" />
+      )}
       <path
-        d="M43 62 Q50 68 57 62"
+        d={id === "duck" ? "M45 65 Q50 69 55 65" : "M43 62 Q50 68 57 62"}
         fill="none"
         stroke="#2b2b33"
         strokeWidth="2.4"
         strokeLinecap="round"
       />
 
-      {/* paws */}
-      <ellipse cx="34" cy="88" rx="8" ry="6" fill={c.inner} />
-      <ellipse cx="66" cy="88" rx="8" ry="6" fill={c.inner} />
+      {/* paws / webbed feet */}
+      <ellipse cx="34" cy="88" rx="8" ry="6" fill={id === "duck" ? "#f0912f" : c.inner} />
+      <ellipse cx="66" cy="88" rx="8" ry="6" fill={id === "duck" ? "#f0912f" : c.inner} />
     </svg>
   );
 }

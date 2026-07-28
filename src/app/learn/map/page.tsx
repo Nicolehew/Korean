@@ -7,12 +7,14 @@ const STATUS_LABEL = {
   completed: "Completed",
   in_progress: "In progress",
   locked: "Locked",
+  available: "Open",
 } as const;
 
 const STATUS_STYLE = {
   completed: "bg-mint/15 text-mint",
   in_progress: "bg-primary/15 text-primary",
   locked: "bg-muted/15 text-muted",
+  available: "bg-sky/15 text-sky",
 } as const;
 
 const UNIT_EMOJI: Record<string, string> = {
@@ -46,7 +48,7 @@ export default async function LevelMapPage() {
           <h2 className="text-lg font-bold">{level.name}</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {level.units.map((unit) => {
-              const locked = unit.progress.status === "locked";
+              const locked = false;
               const badgeColor =
                 unit.progress.status === "completed"
                   ? "mint"

@@ -3,6 +3,7 @@ import { getLevelMap, findNextLesson, getStreak } from "@/lib/data/progress";
 import { LevelPath } from "@/components/lesson/level-path";
 import { StatsBar } from "@/components/ui/stats-bar";
 import { toMascotId } from "@/lib/mascots";
+import { WelcomeOverlay } from "@/components/ui/welcome-overlay";
 
 const BANNER_TONES = [
   "bg-primary",
@@ -31,6 +32,7 @@ export default async function LearnHomePage() {
 
   return (
     <div className="flex flex-col">
+      <WelcomeOverlay name={profile.full_name} mascot={mascot} />
       {/* stats stay pinned while the course scrolls beneath */}
       <div className="sticky top-0 z-10 -mx-4 bg-background/95 px-4 backdrop-blur">
         <StatsBar

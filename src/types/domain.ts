@@ -3,7 +3,7 @@
 // src/types/database.ts).
 
 export type UserRole = "student" | "parent" | "teacher" | "admin";
-export type ProgressStatus = "locked" | "in_progress" | "completed";
+export type ProgressStatus = "locked" | "available" | "in_progress" | "completed";
 export type LessonType = "standard" | "unlock_game";
 export type ExerciseType =
   | "vocab_card"
