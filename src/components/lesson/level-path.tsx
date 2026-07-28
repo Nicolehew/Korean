@@ -2,36 +2,31 @@ import Link from "next/link";
 import type { LessonWithStatus } from "@/lib/data/progress";
 import { Mascot, type MascotId } from "@/components/ui/mascot";
 
-const NODE_Y_STEP = 140;
-const TOP_PADDING = 56;
-const BOTTOM_PADDING = 56;
+// Each stage occupies a fixed row; the label sits inside that row so a
+// two-line lesson name can never collide with the next circle.
+const ROW_HEIGHT = 132;
 
-// Gentle left/right sway like Duolingo's path. Percentages keep it inside
-// the viewport at any width, so the page never scrolls sideways.
+// Gentle left/right sway like Duolingo's path. Percentages keep every node
+// inside the viewport at any width, so the page never scrolls sideways.
 function nodeX(index: number): number {
-  return 50 + 22 * Math.sin(index * 1.15);
+  return 50 + 20 * Math.sin(index * 1.15);
 }
 
 export function LevelPath({
   lessons,
   mascot,
+  showMascot = false,
 }: {
   lessons: LessonWithStatus[];
   mascot: MascotId;
+  showMascot?: boolean;
 }) {
-  const height =
-    TOP_PADDING + Math.max(lessons.length - 1, 0) * NODE_Y_STEP + BOTTOM_PADDING;
-  const points = lessons.map((_, i) => ({
-    x: nodeX(i),
-    y: TOP_PADDING + i * NODE_Y_STEP,
-  }));
-
   const activeIndex = lessons.findIndex((l) => l.status === "in_progress");
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ height }}>
+    <div className="relative w-full" style={{ height: lessons.length * ROW_HEIGHT }}>
       {lessons.map((lesson, i) => {
-        const { x, y } = points[i];
+        const x = nodeX(i);
         const locked = lesson.status === "locked";
         const completed = lesson.status === "completed";
         const isActive = i === activeIndex;
@@ -55,7 +50,7 @@ export function LevelPath({
           <div
             key={lesson.id}
             className="absolute flex -translate-x-1/2 flex-col items-center"
-            style={{ left: `${x}%`, top: y, width: "8rem" }}
+            style={{ left: `${x}%`, top: i * ROW_HEIGHT, width: "8.5rem" }}
           >
             {isActive && (
               <span className="mb-1 rounded-lg bg-card px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary shadow">
@@ -76,17 +71,16 @@ export function LevelPath({
         );
       })}
 
-      {/* mascot cheering beside the current stage */}
-      {activeIndex >= 0 && (
+      {showMascot && activeIndex >= 0 && (
         <div
           className="absolute"
           style={{
-            top: points[activeIndex].y - 6,
-            left: points[activeIndex].x > 50 ? "8%" : "auto",
-            right: points[activeIndex].x > 50 ? "auto" : "8%",
+            top: activeIndex * ROW_HEIGHT + 24,
+            left: nodeX(activeIndex) > 50 ? "6%" : "auto",
+            right: nodeX(activeIndex) > 50 ? "auto" : "6%",
           }}
         >
-          <Mascot id={mascot} size={56} animate />
+          <Mascot id={mascot} size={54} animate />
         </div>
       )}
     </div>
