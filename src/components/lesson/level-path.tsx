@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { LessonWithStatus } from "@/lib/data/progress";
+import { Mascot, type MascotId } from "@/components/ui/mascot";
 
 const NODE_Y_STEP = 120;
 const TOP_PADDING = 70;
@@ -16,7 +17,7 @@ export function LevelPath({
 }: {
   unitName: string;
   lessons: LessonWithStatus[];
-  mascot: string;
+  mascot: MascotId;
 }) {
   const height = TOP_PADDING + Math.max(lessons.length - 1, 0) * NODE_Y_STEP + BOTTOM_PADDING;
   const points = lessons.map((_, i) => ({ x: nodeX(i), y: TOP_PADDING + i * NODE_Y_STEP }));
@@ -28,9 +29,7 @@ export function LevelPath({
       <div className="cloud" style={{ width: 50, height: 26, top: "14%", right: "10%", animationDelay: "1.5s" }} />
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-lg font-extrabold drop-shadow">{unitName}</h2>
-        <span className="text-3xl" style={{ animation: "floatY 4s ease-in-out infinite" }}>
-          {mascot}
-        </span>
+        <Mascot id={mascot} size={52} animate />
       </div>
 
       <div className="relative" style={{ height }}>

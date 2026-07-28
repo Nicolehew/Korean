@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { submitLessonResult } from "@/lib/actions/progress";
+import { SpeakButton } from "@/components/ui/speak-button";
 import type { Exercise, ExerciseQuestion, Lesson } from "@/types/domain";
 
 type ExerciseWithQuestions = Exercise & { questions: ExerciseQuestion[] };
@@ -172,7 +173,9 @@ export function LessonPlayer({
         {question.prompt_ko && <p className="text-4xl font-extrabold">{question.prompt_ko}</p>}
         {question.romanization && <p className="text-muted">{question.romanization}</p>}
         {question.prompt_en && <p className="text-lg">{question.prompt_en}</p>}
-        {question.audio_url && <p className="text-sm text-muted">🔊 {question.audio_url}</p>}
+        {(question.prompt_ko || question.correct_answer) && (
+          <SpeakButton text={question.prompt_ko ?? question.correct_answer ?? ""} />
+        )}
 
         {step.kind === "build" && (
           <div className="mt-2 flex min-h-[3rem] w-full flex-wrap items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border p-3">

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { requireRole } from "@/lib/data/session";
 import { logout } from "@/lib/actions/auth";
-import { MASCOTS } from "@/lib/mascots";
+import { toMascotId } from "@/lib/mascots";
+import { Mascot } from "@/components/ui/mascot";
 
 export default async function LearnLayout({
   children,
@@ -24,7 +25,7 @@ export default async function LearnLayout({
             href="/learn/profile"
             className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-primary transition hover:bg-primary/20"
           >
-            <span>{profile.avatar_url ?? MASCOTS[0]}</span> {profile.full_name}
+            <Mascot id={toMascotId(profile.avatar_url)} size={22} /> {profile.full_name}
           </Link>
           <form action={logout}>
             <button type="submit" className="text-muted transition hover:text-foreground">

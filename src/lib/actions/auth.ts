@@ -8,10 +8,23 @@ import type { UserRole } from "@/types/domain";
 
 export type AuthFormState = { error: string } | undefined;
 
+// Without these, createClient() throws and the whole route 500s with an
+// opaque "server error occurred". Surface it as a normal form error instead.
+const MISSING_ENV_MESSAGE =
+  "This site isn't connected to its database yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in the hosting environment settings.";
+
+function supabaseConfigured() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
+}
+
 export async function login(
   _prevState: AuthFormState,
   formData: FormData,
 ): Promise<AuthFormState> {
+  if (!supabaseConfigured()) return { error: MISSING_ENV_MESSAGE };
+
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
@@ -35,6 +48,8 @@ export async function signup(
   _prevState: AuthFormState,
   formData: FormData,
 ): Promise<AuthFormState> {
+  if (!supabaseConfigured()) return { error: MISSING_ENV_MESSAGE };
+
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const fullName = String(formData.get("full_name") ?? "");

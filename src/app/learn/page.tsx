@@ -3,7 +3,7 @@ import { getCurrentProfile } from "@/lib/data/session";
 import { getLevelMap, findNextLesson, getStreak } from "@/lib/data/progress";
 import { IconBadge } from "@/components/ui/icon-badge";
 import { LevelPath } from "@/components/lesson/level-path";
-import { MASCOTS } from "@/lib/mascots";
+import { toMascotId } from "@/lib/mascots";
 
 export default async function LearnHomePage() {
   const profile = await getCurrentProfile();
@@ -40,7 +40,7 @@ export default async function LearnHomePage() {
           <LevelPath
             unitName={`${currentLevel?.name} · ${currentUnit.name}`}
             lessons={currentUnit.lessons}
-            mascot={profile.avatar_url ?? MASCOTS[0]}
+            mascot={toMascotId(profile.avatar_url)}
           />
         </div>
       ) : (

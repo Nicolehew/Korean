@@ -1,8 +1,8 @@
 import { getCurrentProfile } from "@/lib/data/session";
 import { logout } from "@/lib/actions/auth";
-import { IconBadge } from "@/components/ui/icon-badge";
 import { MascotSelector } from "@/components/ui/mascot-selector";
-import { MASCOTS } from "@/lib/mascots";
+import { toMascotId } from "@/lib/mascots";
+import { Mascot } from "@/components/ui/mascot";
 
 export default async function ProfilePage() {
   const profile = await getCurrentProfile();
@@ -12,7 +12,7 @@ export default async function ProfilePage() {
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-extrabold">Profile</h1>
       <div className="pop-card flex items-center gap-4 p-5">
-        <IconBadge emoji={profile.avatar_url ?? MASCOTS[0]} color="violet" size={64} />
+        <Mascot id={toMascotId(profile.avatar_url)} size={72} animate />
         <div>
           <p className="text-lg font-bold">{profile.full_name}</p>
           <p className="text-sm capitalize text-muted">{profile.role}</p>
