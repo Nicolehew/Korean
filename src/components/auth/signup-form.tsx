@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { signup } from "@/lib/actions/auth";
+import { MascotPicker } from "@/components/ui/mascot-picker";
 
 export function SignupForm() {
   const [state, action, pending] = useActionState(signup, undefined);
@@ -45,6 +46,7 @@ export function SignupForm() {
           className="rounded-xl border-2 border-border bg-card px-4 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
         />
       </div>
+      <MascotPicker />
       <fieldset className="flex flex-col gap-1">
         <legend className="text-sm font-medium">I am a...</legend>
         <div className="flex gap-4 text-sm">

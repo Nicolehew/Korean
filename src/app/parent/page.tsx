@@ -1,6 +1,7 @@
 import { getCurrentProfile } from "@/lib/data/session";
 import { getStreak, getLevelMap } from "@/lib/data/progress";
 import { createClient } from "@/lib/supabase/server";
+import { IconBadge } from "@/components/ui/icon-badge";
 
 export default async function ParentDashboardPage() {
   const profile = await getCurrentProfile();
@@ -18,8 +19,9 @@ export default async function ParentDashboardPage() {
 
   if (students.length === 0) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center text-center">
-        <p className="font-semibold">No linked students yet</p>
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
+        <span className="text-4xl">👨‍👩‍👧</span>
+        <p className="font-bold">No linked students yet</p>
         <p className="max-w-sm text-muted">
           Ask your school to link your account to your child&apos;s student profile.
         </p>
@@ -41,22 +43,34 @@ export default async function ParentDashboardPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">Your children</h1>
-      {studentSummaries.map(({ student, streak, unitsCompleted, totalUnits }) => (
-        <div key={student.id} className="rounded-xl border border-border bg-card p-4">
-          <p className="mb-2 font-semibold">{student.full_name}</p>
-          <div className="grid grid-cols-3 gap-3 text-center text-sm">
-            <div>
-              <p className="text-lg">🔥 {streak?.current_streak ?? 0}</p>
-              <p className="text-muted">day streak</p>
+      <h1 className="text-2xl font-extrabold">👨‍👩‍👧 Your children</h1>
+      {studentSummaries.map(({ student, streak, unitsCompleted, totalUnits }, i) => (
+        <div
+          key={student.id}
+          className="pop-card p-5"
+          style={{ animation: `fadeSlideUp 0.5s ease-out ${i * 0.06}s both` }}
+        >
+          <div className="mb-4 flex items-center gap-3">
+            <IconBadge emoji="🧑‍🎓" color="violet" size={48} />
+            <p className="text-lg font-bold">{student.full_name}</p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="flex flex-col items-center gap-1">
+              <IconBadge emoji="🔥" color="coral" size={40} />
+              <p className="font-bold">{streak?.current_streak ?? 0}</p>
+              <p className="text-xs text-muted">day streak</p>
             </div>
-            <div>
-              <p className="text-lg">✅ {unitsCompleted}/{totalUnits}</p>
-              <p className="text-muted">units done</p>
+            <div className="flex flex-col items-center gap-1">
+              <IconBadge emoji="✅" color="mint" size={40} />
+              <p className="font-bold">
+                {unitsCompleted}/{totalUnits}
+              </p>
+              <p className="text-xs text-muted">units done</p>
             </div>
-            <div>
-              <p className="text-lg">🏆 {streak?.longest_streak ?? 0}</p>
-              <p className="text-muted">best streak</p>
+            <div className="flex flex-col items-center gap-1">
+              <IconBadge emoji="🏆" color="sun" size={40} />
+              <p className="font-bold">{streak?.longest_streak ?? 0}</p>
+              <p className="text-xs text-muted">best streak</p>
             </div>
           </div>
         </div>

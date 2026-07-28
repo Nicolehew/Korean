@@ -79,6 +79,25 @@ body {
   animation: floatY 7s ease-in-out infinite;
 }
 
+/* ---- Sky background (level path chooser) ---- */
+.sky-bg {
+  position: relative;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.5), transparent 12%),
+    radial-gradient(circle at 78% 30%, rgba(255, 255, 255, 0.35), transparent 10%),
+    radial-gradient(circle at 60% 75%, rgba(255, 255, 255, 0.3), transparent 9%),
+    linear-gradient(180deg, #1c6fd6 0%, #3f9de8 45%, #6ec3f2 100%);
+  color: #fdfeff;
+  overflow: hidden;
+}
+.sky-bg .cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 9999px;
+  filter: blur(0.5px);
+  animation: floatY 6s ease-in-out infinite;
+}
+
 /* ---- Reusable playful bits ---- */
 .pop-card {
   background: var(--card);

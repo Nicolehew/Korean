@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getCurrentProfile } from "@/lib/data/session";
 import { getLevelMap, findNextLesson, getStreak } from "@/lib/data/progress";
 import { IconBadge } from "@/components/ui/icon-badge";
+import { LevelPath } from "@/components/lesson/level-path";
+import { MASCOTS } from "@/lib/mascots";
 
 export default async function LearnHomePage() {
   const profile = await getCurrentProfile();
@@ -12,12 +14,14 @@ export default async function LearnHomePage() {
     getStreak(profile.id),
   ]);
   const next = findNextLesson(levelMap);
+  const currentUnit = next?.unit ?? levelMap[0]?.units[0];
+  const currentLevel = next?.level ?? levelMap[0];
 
   return (
     <div className="flex flex-col gap-6">
       <div style={{ animation: "fadeSlideUp 0.5s ease-out both" }}>
         <h1 className="text-2xl font-extrabold">Hi, {profile.full_name}! 👋</h1>
-        <p className="text-muted">Let&apos;s continue learning</p>
+        <p className="text-muted">Choose a stage to play</p>
       </div>
 
       <div
@@ -31,26 +35,17 @@ export default async function LearnHomePage() {
         </div>
       </div>
 
-      {next ? (
-        <div
-          className="pop-card p-5"
-          style={{ animation: "fadeSlideUp 0.5s ease-out 0.1s both" }}
-        >
-          <p className="text-sm font-semibold text-muted">Continue learning</p>
-          <p className="mb-4 text-lg font-bold">
-            {next.level.name} · {next.unit.name} · {next.lesson.name}
-          </p>
-          <Link
-            href={`/learn/lesson/${next.lesson.id}`}
-            className="pill-btn inline-block bg-mint px-6 py-3 text-white shadow-md shadow-mint/30"
-          >
-            Continue →
-          </Link>
+      {currentUnit ? (
+        <div style={{ animation: "fadeSlideUp 0.5s ease-out 0.1s both" }}>
+          <LevelPath
+            unitName={`${currentLevel?.name} · ${currentUnit.name}`}
+            lessons={currentUnit.lessons}
+            mascot={profile.avatar_url ?? MASCOTS[0]}
+          />
         </div>
       ) : (
         <div className="pop-card p-5" style={{ animation: "fadeSlideUp 0.5s ease-out 0.1s both" }}>
           <p className="font-bold">You&apos;re all caught up! 🎉</p>
-          <p className="text-sm text-muted">Check the map for what&apos;s next.</p>
         </div>
       )}
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireRole } from "@/lib/data/session";
 import { logout } from "@/lib/actions/auth";
+import { MASCOTS } from "@/lib/mascots";
 
 export default async function LearnLayout({
   children,
@@ -21,9 +22,9 @@ export default async function LearnLayout({
           <Link href="/learn/rewards" className="transition hover:text-primary">Rewards</Link>
           <Link
             href="/learn/profile"
-            className="rounded-full bg-primary/10 px-3 py-1 text-primary transition hover:bg-primary/20"
+            className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-primary transition hover:bg-primary/20"
           >
-            {profile.full_name}
+            <span>{profile.avatar_url ?? MASCOTS[0]}</span> {profile.full_name}
           </Link>
           <form action={logout}>
             <button type="submit" className="text-muted transition hover:text-foreground">

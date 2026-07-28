@@ -1,6 +1,8 @@
 import { getCurrentProfile } from "@/lib/data/session";
 import { logout } from "@/lib/actions/auth";
 import { IconBadge } from "@/components/ui/icon-badge";
+import { MascotSelector } from "@/components/ui/mascot-selector";
+import { MASCOTS } from "@/lib/mascots";
 
 export default async function ProfilePage() {
   const profile = await getCurrentProfile();
@@ -10,11 +12,15 @@ export default async function ProfilePage() {
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-extrabold">Profile</h1>
       <div className="pop-card flex items-center gap-4 p-5">
-        <IconBadge emoji="🧑‍🎓" color="violet" size={64} />
+        <IconBadge emoji={profile.avatar_url ?? MASCOTS[0]} color="violet" size={64} />
         <div>
           <p className="text-lg font-bold">{profile.full_name}</p>
           <p className="text-sm capitalize text-muted">{profile.role}</p>
         </div>
+      </div>
+      <div className="pop-card p-5">
+        <p className="mb-3 font-bold">Your mascot</p>
+        <MascotSelector currentAvatar={profile.avatar_url} />
       </div>
       <form action={logout}>
         <button type="submit" className="pill-btn border-2 border-border px-6 py-2.5 font-semibold">

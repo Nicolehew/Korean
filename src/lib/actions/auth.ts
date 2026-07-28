@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { homePathForRole } from "@/lib/data/session";
+import { DEFAULT_MASCOT } from "@/lib/mascots";
 import type { UserRole } from "@/types/domain";
 
 export type AuthFormState = { error: string } | undefined;
@@ -39,12 +40,13 @@ export async function signup(
   const fullName = String(formData.get("full_name") ?? "");
   // Only 'student' or 'parent' are ever accepted — see handle_new_user().
   const role = String(formData.get("role") ?? "student");
+  const avatarUrl = String(formData.get("avatar") ?? DEFAULT_MASCOT);
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { full_name: fullName, role } },
+    options: { data: { full_name: fullName, role, avatar_url: avatarUrl } },
   });
   if (error) return { error: error.message };
 
