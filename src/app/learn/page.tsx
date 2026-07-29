@@ -34,7 +34,7 @@ export default async function LearnHomePage() {
     <div className="flex flex-col">
       <WelcomeOverlay name={profile.full_name} mascot={mascot} />
       {/* stats stay pinned while the course scrolls beneath */}
-      <div className="sticky top-0 z-10 -mx-4 bg-background/95 px-4 backdrop-blur">
+      <div className="sticky top-[49px] z-10 -mx-4 bg-background/95 px-4 backdrop-blur">
         <StatsBar
           mascot={mascot}
           streak={streak?.current_streak ?? 0}
