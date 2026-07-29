@@ -114,7 +114,7 @@ export function LevelPath({
             {locked ? (
               circle
             ) : (
-              <Link href={`/learn/lesson/${lesson.id}`} aria-label={lesson.name}>
+              <Link href={`/learn/lesson/${lesson.id}`} prefetch aria-label={lesson.name} className="active:scale-95 transition">
                 {circle}
               </Link>
             )}

@@ -1,6 +1,7 @@
 import { getCurrentProfile } from "@/lib/data/session";
 import { logout } from "@/lib/actions/auth";
 import { MascotSelector } from "@/components/ui/mascot-selector";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { toMascotId } from "@/lib/mascots";
 import { Mascot } from "@/components/ui/mascot";
 
@@ -21,6 +22,10 @@ export default async function ProfilePage() {
       <div className="pop-card p-5">
         <p className="mb-3 font-bold">Your mascot</p>
         <MascotSelector currentAvatar={profile.avatar_url} />
+      </div>
+      <div className="pop-card p-5">
+        <p className="mb-3 font-bold">Appearance</p>
+        <ThemeToggle />
       </div>
       <form action={logout}>
         <button type="submit" className="pill-btn border-2 border-border px-6 py-2.5 font-semibold">

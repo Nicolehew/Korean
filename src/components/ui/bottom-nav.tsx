@@ -21,8 +21,9 @@ export function BottomNav() {
           <Link
             key={tab.href}
             href={tab.href}
+            prefetch
             aria-current={active ? "page" : undefined}
-            className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[11px] font-bold transition ${
+            className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[11px] font-bold transition active:scale-90 ${
               active ? "text-primary" : "text-muted"
             }`}
           >

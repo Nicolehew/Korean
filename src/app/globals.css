@@ -40,8 +40,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark palette: applied when the OS asks for it, unless the user has
+   explicitly chosen light in-app. An explicit data-theme always wins. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --background: #16121f;
     --foreground: #f1eefb;
     --card: #201a30;
@@ -52,6 +54,18 @@
     --accent-foreground: #16121f;
     --muted: #a79fbb;
   }
+}
+
+:root[data-theme="dark"] {
+    --background: #16121f;
+    --foreground: #f1eefb;
+    --card: #201a30;
+    --border: #362b4d;
+    --primary: #8a77ff;
+    --primary-foreground: #16121f;
+    --accent: #ffc247;
+    --accent-foreground: #16121f;
+    --muted: #a79fbb;
 }
 
 html, body {
@@ -207,6 +221,18 @@ body {
   background:
     radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.9), transparent 40%),
     linear-gradient(180deg, #f6f2ff 0%, #eee8ff 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .path-bg {
+    background:
+      radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.06), transparent 40%),
+      linear-gradient(180deg, #241d38 0%, #1b1529 100%);
+  }
+}
+:root[data-theme="dark"] .path-bg {
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255, 255, 255, 0.06), transparent 40%),
+    linear-gradient(180deg, #241d38 0%, #1b1529 100%);
 }
 
 @keyframes fadeOut {
