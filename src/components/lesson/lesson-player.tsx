@@ -81,7 +81,8 @@ export function LessonPlayer({
       unitId: lesson.unit_id,
       nextUnitId,
       scorePct,
-      isUnlockGame: lesson.lesson_type === "unlock_game",
+      isUnlockGame:
+        lesson.lesson_type === "unlock_game" || lesson.lesson_type === "level_test",
       unlockThresholdPct: lesson.unlock_threshold_pct,
     });
     setSubmitting(false);
@@ -126,18 +127,20 @@ export function LessonPlayer({
           {celebrate ? "🎉" : "💪"}
         </p>
         <h1 className="text-3xl font-extrabold">Score: {result.scorePct}%</h1>
-        {lesson.lesson_type === "unlock_game" && (
+        {lesson.lesson_type !== "standard" && (
           <p className="max-w-xs text-muted">
             {result.passedGate
-              ? "Next unit unlocked!"
-              : `You need ${lesson.unlock_threshold_pct}% to unlock the next unit. Try again!`}
+              ? lesson.lesson_type === "level_test"
+                ? "Level passed — the next level is unlocked! 🎉"
+                : "Next unit unlocked!"
+              : `You need ${lesson.unlock_threshold_pct}% to pass. Try again!`}
           </p>
         )}
         <div className="flex gap-3">
           <Link href="/learn/map" className="pill-btn border-2 border-border px-6 py-3 font-semibold">
             Back to map
           </Link>
-          {!result.passedGate && lesson.lesson_type === "unlock_game" && (
+          {!result.passedGate && lesson.lesson_type !== "standard" && (
             <Link
               href={`/learn/lesson/${lesson.id}`}
               className="pill-btn bg-primary px-6 py-3 text-primary-foreground shadow-md shadow-primary/30"

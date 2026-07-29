@@ -43,8 +43,19 @@ export default async function LearnHomePage() {
         />
       </div>
 
-      {levelMap.map((level) =>
-        level.units.map((unit, unitIndex) => (
+      {levelMap.map((level) => (
+        <div key={level.id} className="flex flex-col">
+          {level.locked && (
+            <div className="mt-6 rounded-2xl border-2 border-dashed border-border p-4 text-center">
+              <p className="text-2xl">🔒</p>
+              <p className="font-bold">{level.name} is locked</p>
+              <p className="text-sm text-muted">
+                Pass the previous level&apos;s test 🏁 to unlock it.
+              </p>
+            </div>
+          )}
+          {!level.locked &&
+            level.units.map((unit, unitIndex) => (
           <section key={unit.id} className="flex flex-col">
             <div
               className={`mt-4 rounded-2xl px-4 py-3 text-white shadow-md ${
@@ -63,8 +74,9 @@ export default async function LearnHomePage() {
               showMascot={unit.id === activeUnitId}
             />
           </section>
-        )),
-      )}
+            ))}
+        </div>
+      ))}
 
       <p className="py-8 text-center text-sm font-semibold text-muted">
         More lessons coming soon 🎉

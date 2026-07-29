@@ -4,7 +4,7 @@
 
 export type UserRole = "student" | "parent" | "teacher" | "admin";
 export type ProgressStatus = "locked" | "available" | "in_progress" | "completed";
-export type LessonType = "standard" | "unlock_game";
+export type LessonType = "standard" | "unlock_game" | "level_test";
 export type ExerciseType =
   | "vocab_card"
   | "multiple_choice"
@@ -26,6 +26,7 @@ export type Level = {
   slug: string;
   order_index: number;
   description: string | null;
+  test_threshold_pct: number;
 };
 
 export type Unit = {

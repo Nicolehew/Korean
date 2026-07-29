@@ -79,18 +79,24 @@ export function LevelPath({
         const completed = lesson.status === "completed";
         const isActive = i === activeIndex;
         const isGate = lesson.lesson_type === "unlock_game";
+        const isTest = lesson.lesson_type === "level_test";
+        const locked = lesson.status === "locked";
 
         const circle = (
           <div
             className={`flex h-16 w-16 items-center justify-center rounded-full text-2xl font-extrabold transition active:translate-y-1 ${
               completed
                 ? "bg-mint text-white shadow-[0_5px_0_#0f9c78]"
-                : isActive
-                  ? "bg-sun text-white shadow-[0_5px_0_#d99a1f]"
-                  : "bg-white text-primary shadow-[0_5px_0_#cfc6f5]"
+                : locked
+                  ? "bg-border text-muted shadow-[0_5px_0_rgba(0,0,0,0.10)]"
+                  : isTest
+                    ? "bg-coral text-white shadow-[0_5px_0_#d4455a]"
+                    : isActive
+                      ? "bg-sun text-white shadow-[0_5px_0_#d99a1f]"
+                      : "bg-white text-primary shadow-[0_5px_0_#cfc6f5]"
             }`}
           >
-            {completed ? "★" : isGate ? "🎮" : i + 1}
+            {locked ? "🔒" : completed ? "★" : isTest ? "🏁" : isGate ? "🎮" : i + 1}
           </div>
         );
 
@@ -105,9 +111,13 @@ export function LevelPath({
                 Start
               </span>
             )}
-            <Link href={`/learn/lesson/${lesson.id}`} aria-label={lesson.name}>
-              {circle}
-            </Link>
+            {locked ? (
+              circle
+            ) : (
+              <Link href={`/learn/lesson/${lesson.id}`} aria-label={lesson.name}>
+                {circle}
+              </Link>
+            )}
             <p className="mt-1.5 line-clamp-2 text-center text-[11px] font-bold leading-tight text-muted">
               {lesson.name}
             </p>

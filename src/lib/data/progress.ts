@@ -15,7 +15,12 @@ export type UnitWithProgress = Unit & {
   lessons: LessonWithStatus[];
   progress: { status: ProgressStatus; stars: number };
 };
-export type LevelMap = (Level & { units: UnitWithProgress[] })[];
+export type LevelMap = (Level & {
+  units: UnitWithProgress[];
+  /** Locked levels are visible but not enterable until the prior test passes. */
+  locked: boolean;
+  testPassed: boolean;
+})[];
 
 export async function getLevelMap(userId: string): Promise<LevelMap> {
   const supabase = await createClient();
@@ -45,8 +50,44 @@ export async function getLevelMap(userId: string): Promise<LevelMap> {
     (a, b) => a.order_index - b.order_index,
   );
 
-  return ((levels ?? []) as Level[]).map((level) => ({
+  const orderedLevels = [...((levels ?? []) as Level[])].sort(
+    (a, b) => a.order_index - b.order_index,
+  );
+
+  // A level's test counts as passed when its level_test lesson is completed
+  // at or above the level's threshold.
+  const testPassedByLevel = new Map<string, boolean>();
+  for (const level of orderedLevels) {
+    const levelUnitIds = sortedUnits
+      .filter((u) => u.level_id === level.id)
+      .map((u) => u.id);
+    const testLessons = ((lessons ?? []) as Lesson[]).filter(
+      (l) => levelUnitIds.includes(l.unit_id) && l.lesson_type === "level_test",
+    );
+    const passed =
+      testLessons.length > 0 &&
+      testLessons.some((l) => {
+        const rec = lessonProgressById.get(l.id);
+        return (
+          rec?.status === "completed" &&
+          (rec.score ?? 0) >= (level.test_threshold_pct ?? 80)
+        );
+      });
+    testPassedByLevel.set(level.id, passed);
+  }
+
+  let priorLevelBlocked = false;
+
+  return orderedLevels.map((level) => {
+    const testPassed = testPassedByLevel.get(level.id) ?? false;
+    const locked = priorLevelBlocked;
+    // Once a level's test is unpassed, everything after it is gated.
+    priorLevelBlocked = priorLevelBlocked || !testPassed;
+
+    return {
     ...level,
+    locked,
+    testPassed,
     units: sortedUnits
       .filter((u) => u.level_id === level.id)
       .map((unit) => {
@@ -78,14 +119,21 @@ export async function getLevelMap(userId: string): Promise<LevelMap> {
 
         return {
           ...unit,
-          lessons: lessonsWithStatus,
+          lessons: lessonsWithStatus.map((l) =>
+            locked ? { ...l, status: "locked" as ProgressStatus } : l,
+          ),
           progress: {
-            status: (allDone ? "completed" : "in_progress") as ProgressStatus,
+            status: (locked
+              ? "locked"
+              : allDone
+                ? "completed"
+                : "in_progress") as ProgressStatus,
             stars: storedUnit?.stars ?? 0,
           },
         };
       }),
-  }));
+    };
+  });
 }
 
 export function findNextLesson(levelMap: LevelMap) {
