@@ -13,18 +13,40 @@ export function speakableKorean(raw: string): string {
   t = t.replace(/\[[^\]]*\]/g, " ");
   // Leading dashes mark a grammar ending ("-습니다"), not speech.
   t = t.replace(/(^|\s)[-–]+/g, " ");
-  // Keep Hangul, spaces and sentence punctuation; drop the rest.
-  t = t.replace(/[^\uAC00-\uD7A3\u3130-\u318F0-9\s?!.,]/g, " ");
+  // Keep Hangul, digits and spaces only. Sentence punctuation is dropped
+  // deliberately: it changes nothing about pronunciation, and a fallback
+  // voice with no Korean support will happily read "?" out as the words
+  // "question mark" while silently skipping the Hangul.
+  t = t.replace(/[^\uAC00-\uD7A3\u3130-\u318F0-9\s]/g, " ");
   return t.replace(/\s+/g, " ").trim();
 }
 
-export function speakKorean(text: string) {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+/** A real Korean voice, or null when the device has none installed. */
+export function findKoreanVoice(): SpeechSynthesisVoice | null {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  return voices.find((v) => v.lang === "ko-KR" || v.lang.startsWith("ko")) ?? null;
+}
+
+export type SpeakResult = "spoken" | "unsupported" | "no-korean-voice";
+
+export function speakKorean(text: string): SpeakResult {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    return "unsupported";
+  }
   const phrase = speakableKorean(text);
-  if (!phrase) return;
+  if (!phrase) return "unsupported";
+
+  // Without a Korean voice the browser substitutes the system default, which
+  // cannot pronounce Hangul. Better to say so than to emit nonsense.
+  const voice = findKoreanVoice();
+  if (!voice) return "no-korean-voice";
+
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(phrase);
-  utterance.lang = "ko-KR";
+  utterance.voice = voice;
+  utterance.lang = voice.lang;
   utterance.rate = 0.85;
   window.speechSynthesis.speak(utterance);
+  return "spoken";
 }
