@@ -83,10 +83,9 @@ body {
 .cosmic-bg {
   position: relative;
   background:
-    radial-gradient(ellipse at 20% -10%, rgba(255, 194, 60, 0.25), transparent 55%),
-    radial-gradient(circle, rgba(255, 255, 255, 0.55) 1.5px, transparent 1.5px),
-    linear-gradient(160deg, #2a1a5e 0%, #3d1f7a 45%, #1a1140 100%);
-  background-size: auto, 26px 26px, auto;
+    radial-gradient(ellipse at 75% 8%, rgba(168, 128, 255, 0.55), transparent 58%),
+    radial-gradient(ellipse at 15% 92%, rgba(109, 86, 250, 0.45), transparent 60%),
+    linear-gradient(165deg, #6d4bd6 0%, #55329f 38%, #3a1f74 72%, #251247 100%);
   color: #fdfcff;
   overflow: hidden;
 }

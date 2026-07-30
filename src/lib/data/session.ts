@@ -2,12 +2,12 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Profile, UserRole } from "@/types/domain";
+import type { Profile } from "@/types/domain";
 
 // Memoized per-request: safe to call from multiple Server Components
 // without re-querying Supabase each time.
 export const getCurrentProfile = cache(async (): Promise<Profile | null> => {
-  // Lets public pages (/, /login, /signup) render before a Supabase
+  // Lets the welcome page render before a Supabase
   // project is wired up, instead of crashing on missing env vars.
   if (
     !process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -31,20 +31,8 @@ export const getCurrentProfile = cache(async (): Promise<Profile | null> => {
   return (profile as Profile) ?? null;
 });
 
-const HOME_BY_ROLE: Record<UserRole, string> = {
-  student: "/learn",
-  parent: "/parent",
-  teacher: "/teacher",
-  admin: "/teacher",
-};
-
-export async function requireRole(allowed: UserRole[]) {
+export async function requireStudent() {
   const profile = await getCurrentProfile();
   if (!profile) redirect("/");
-  if (!allowed.includes(profile.role)) redirect(HOME_BY_ROLE[profile.role]);
   return profile;
-}
-
-export function homePathForRole(role: UserRole) {
-  return HOME_BY_ROLE[role];
 }

@@ -1,4 +1,4 @@
-import { requireRole } from "@/lib/data/session";
+import { requireStudent } from "@/lib/data/session";
 import { BottomNav } from "@/components/ui/bottom-nav";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
@@ -7,7 +7,7 @@ export default async function LearnLayout({
 }: {
   children: React.ReactNode;
 }) {
-  await requireRole(["student"]);
+  await requireStudent();
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col bg-background">
