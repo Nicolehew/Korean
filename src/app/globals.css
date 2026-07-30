@@ -237,3 +237,12 @@ body {
 @keyframes fadeOut {
   to { opacity: 0; visibility: hidden; }
 }
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.85); }
+  50% { opacity: 0.95; transform: scale(1.15); }
+}

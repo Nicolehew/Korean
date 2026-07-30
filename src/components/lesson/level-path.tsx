@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { LessonWithStatus } from "@/lib/data/progress";
 import { Mascot, type MascotId } from "@/components/ui/mascot";
+import { GardenScene } from "@/components/ui/garden-scene";
 
 // Each stage occupies a fixed row; the label sits inside that row so a
 // two-line lesson name can never collide with the next circle.
@@ -41,18 +42,10 @@ export function LevelPath({
 
   return (
     <div
-      className="path-bg relative w-full overflow-hidden rounded-3xl"
+      className="relative w-full overflow-hidden rounded-3xl"
       style={{ height }}
     >
-      {/* clouds */}
-      <div
-        className="scene-cloud"
-        style={{ width: 64, height: 22, top: 24, left: "8%", animationDelay: "0s" }}
-      />
-      <div
-        className="scene-cloud"
-        style={{ width: 46, height: 16, top: 70, left: "55%", animationDelay: "-13s" }}
-      />
+      <GardenScene height={height} />
 
       {/* dirt trail winding between the stages */}
       <svg
@@ -61,13 +54,13 @@ export function LevelPath({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d={trailD} fill="none" stroke="#e6ddff" strokeWidth="13" strokeLinecap="round" />
-        <path d={trailD} fill="none" stroke="#f4f0ff" strokeWidth="9" strokeLinecap="round" />
+        <path d={trailD} fill="none" stroke="#9c7c53" strokeWidth="14" strokeLinecap="round" />
+        <path d={trailD} fill="none" stroke="#e8d9b8" strokeWidth="10" strokeLinecap="round" />
         <path
           d={trailD}
           fill="none"
-          stroke="#d8ceff"
-          strokeWidth="9"
+          stroke="#cbb692"
+          strokeWidth="10"
           strokeLinecap="butt"
           strokeDasharray="1.5 7"
           opacity="0.5"
@@ -118,7 +111,7 @@ export function LevelPath({
                 {circle}
               </Link>
             )}
-            <p className="mt-1.5 line-clamp-2 text-center text-[11px] font-bold leading-tight text-muted">
+            <p className="mt-1.5 line-clamp-2 rounded-lg bg-white/85 px-1.5 py-0.5 text-center text-[11px] font-bold leading-tight text-[#33402a]">
               {lesson.name}
             </p>
           </div>
