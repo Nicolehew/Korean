@@ -1,4 +1,6 @@
 import { getCurrentProfile } from "@/lib/data/session";
+import { createClient } from "@/lib/supabase/server";
+import { SaveAccountForm } from "@/components/auth/save-account-form";
 import { logout } from "@/lib/actions/auth";
 import { MascotSelector } from "@/components/ui/mascot-selector";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -8,6 +10,14 @@ import { Mascot } from "@/components/ui/mascot";
 export default async function ProfilePage() {
   const profile = await getCurrentProfile();
   if (!profile) return null;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // Guest accounts carry a synthetic address; only show a real one back.
+  const email = user?.email ?? "";
+  const savedEmail = email.endsWith("@students.hangeulquest.app") ? null : email || null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -22,6 +32,10 @@ export default async function ProfilePage() {
       <div className="pop-card p-5">
         <p className="mb-3 font-bold">Your mascot</p>
         <MascotSelector currentAvatar={profile.avatar_url} />
+      </div>
+      <div className="pop-card p-5">
+        <p className="mb-3 font-bold">Save your progress</p>
+        <SaveAccountForm savedEmail={savedEmail} />
       </div>
       <div className="pop-card p-5">
         <p className="mb-3 font-bold">Appearance</p>

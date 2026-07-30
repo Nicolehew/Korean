@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentProfile } from "@/lib/data/session";
 import { StartForm } from "@/components/auth/start-form";
@@ -22,6 +23,13 @@ export default async function Home() {
         style={{ animation: "fadeSlideUp 0.5s ease-out both" }}
       >
         <StartForm />
+
+        <p className="mt-5 text-center text-sm text-white/75">
+          Already saved your progress?{" "}
+          <Link href="/login" className="font-semibold underline">
+            Log in
+          </Link>
+        </p>
       </div>
     </div>
   );
