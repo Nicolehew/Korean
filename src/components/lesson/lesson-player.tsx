@@ -9,9 +9,17 @@ import type { Exercise, ExerciseQuestion, Lesson } from "@/types/domain";
 type ExerciseWithQuestions = Exercise & { questions: ExerciseQuestion[] };
 
 type Step =
-  | { kind: "vocab"; question: ExerciseQuestion }
-  | { kind: "choice"; question: ExerciseQuestion; options: string[] }
-  | { kind: "build"; question: ExerciseQuestion; tokens: string[] };
+  | { kind: "vocab"; question: ExerciseQuestion; speak: string; speakBeforeAnswer: true }
+  | {
+      kind: "choice";
+      question: ExerciseQuestion;
+      options: string[];
+      speak: string;
+      // Listening drills require hearing the phrase up front; for the rest,
+      // playing it early would read the correct answer aloud.
+      speakBeforeAnswer: boolean;
+    }
+  | { kind: "build"; question: ExerciseQuestion; tokens: string[]; speak: string; speakBeforeAnswer: false };
 
 function shuffled<T>(items: T[]): T[] {
   return [...items].sort(() => Math.random() - 0.5);
@@ -24,7 +32,12 @@ function normalize(s: string): string {
 function buildSteps(exercises: ExerciseWithQuestions[]): Step[] {
   return exercises.flatMap((exercise): Step[] => {
     if (exercise.exercise_type === "vocab_card") {
-      return exercise.questions.map((question) => ({ kind: "vocab" as const, question }));
+      return exercise.questions.map((question) => ({
+        kind: "vocab" as const,
+        question,
+        speak: question.prompt_ko ?? "",
+        speakBeforeAnswer: true as const,
+      }));
     }
     if (exercise.exercise_type === "matching") {
       // No drag-and-drop board here — each term is checked one at a time
@@ -32,7 +45,13 @@ function buildSteps(exercises: ExerciseWithQuestions[]): Step[] {
       const pool = shuffled(
         exercise.questions.map((q) => q.correct_answer).filter((a): a is string => !!a),
       );
-      return exercise.questions.map((question) => ({ kind: "choice" as const, question, options: pool }));
+      return exercise.questions.map((question) => ({
+        kind: "choice" as const,
+        question,
+        options: pool,
+        speak: question.prompt_ko ?? "",
+        speakBeforeAnswer: true,
+      }));
     }
     // multiple_choice, listening, sentence_build
     return exercise.questions.map((question) => {
@@ -42,10 +61,24 @@ function buildSteps(exercises: ExerciseWithQuestions[]): Step[] {
       const isBuild =
         opts.length > 1 &&
         !opts.some((o) => normalize(o) === normalize(question.correct_answer ?? ""));
+      const spoken = question.prompt_ko ?? question.correct_answer ?? "";
       if (isBuild) {
-        return { kind: "build" as const, question, tokens: shuffled(opts) };
+        return {
+          kind: "build" as const,
+          question,
+          tokens: shuffled(opts),
+          speak: spoken,
+          speakBeforeAnswer: false as const,
+        };
       }
-      return { kind: "choice" as const, question, options: shuffled(opts) };
+      return {
+        kind: "choice" as const,
+        question,
+        options: shuffled(opts),
+        speak: spoken,
+        // Safe to play early only when the prompt itself is the Korean.
+        speakBeforeAnswer: exercise.exercise_type === "listening" || !!question.prompt_ko,
+      };
     });
   });
 }
@@ -72,6 +105,12 @@ export function LessonPlayer({
 
   const step = steps[index];
   const isLast = index === steps.length - 1;
+  const answered =
+    step?.kind === "choice"
+      ? selected !== null
+      : step?.kind === "build"
+        ? builtIndices.length === step.tokens.length
+        : false;
 
   async function finish(finalCorrect: number, finalGraded: number) {
     const scorePct = finalGraded > 0 ? Math.round((finalCorrect / finalGraded) * 100) : 100;
@@ -176,8 +215,8 @@ export function LessonPlayer({
         {question.prompt_ko && <p className="text-4xl font-extrabold">{question.prompt_ko}</p>}
         {question.romanization && <p className="text-muted">{question.romanization}</p>}
         {question.prompt_en && <p className="text-lg">{question.prompt_en}</p>}
-        {(question.prompt_ko || question.correct_answer) && (
-          <SpeakButton text={question.prompt_ko ?? question.correct_answer ?? ""} />
+        {step.speak && (step.speakBeforeAnswer || answered) && (
+          <SpeakButton text={step.speak} />
         )}
 
         {step.kind === "build" && (
