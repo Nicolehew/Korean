@@ -22,7 +22,7 @@ export default async function SignupPage() {
       >
         <span className="mb-2 block text-center text-4xl">🎒</span>
         <h1 className="mb-6 text-center text-2xl font-extrabold">
-          Create your account
+          Create a teacher / parent account
         </h1>
         <SignupForm />
       </div>

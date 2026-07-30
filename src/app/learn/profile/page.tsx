@@ -29,7 +29,7 @@ export default async function ProfilePage() {
       </div>
       <form action={logout}>
         <button type="submit" className="pill-btn border-2 border-border px-6 py-2.5 font-semibold">
-          Log out
+          Switch learner
         </button>
       </form>
     </div>

@@ -40,7 +40,7 @@ const HOME_BY_ROLE: Record<UserRole, string> = {
 
 export async function requireRole(allowed: UserRole[]) {
   const profile = await getCurrentProfile();
-  if (!profile) redirect("/login");
+  if (!profile) redirect("/");
   if (!allowed.includes(profile.role)) redirect(HOME_BY_ROLE[profile.role]);
   return profile;
 }
