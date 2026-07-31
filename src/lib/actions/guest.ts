@@ -1,7 +1,8 @@
 "use server";
 
-import { randomUUID } from "crypto";
 import { redirect } from "next/navigation";
+
+import { randomUUID } from "crypto";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_MASCOT } from "@/lib/mascots";
 
@@ -41,5 +42,5 @@ export async function startLearning(
   });
   if (error) return { error: error.message };
 
-  redirect("/learn");
+  redirect("/save-progress");
 }

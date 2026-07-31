@@ -7,13 +7,11 @@ import { Mascot, MASCOT_IDS, MASCOT_NAMES, type MascotId } from "@/components/ui
 
 export function StartForm() {
   const [state, action, pending] = useActionState(startLearning, undefined);
-  // Lifted so the big mascot above the card reflects the current choice.
   const [mascot, setMascot] = useState<MascotId>(MASCOT_IDS[0]);
 
   return (
     <>
       <div className="relative z-10 -mb-10 flex justify-center">
-        {/* key remounts the svg so the pop-in animation replays on change */}
         <div key={mascot} style={{ animation: "popIn 0.4s ease-out both" }}>
           <Mascot id={mascot} size={104} animate />
         </div>
